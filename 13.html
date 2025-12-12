@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СПЕКТР АВТОШКОЛА | Premium Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    :root {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* --- ПРЕМИУМ ТЕМА NEBULA (Black, Purple, Gold) --- */
+
+    html, body {
+        height: 100%;
+        min-height: 100vh;
+    }
+
+    body {
+        background-color: #050505; /* Глубокий черный */
+        color: #E5E7EB;
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* Контейнер приложения */
+    #app-container {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- ФОНОВЫЕ ЭФФЕКТЫ (NEBULA) --- */
+    .nebula-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: #000000;
+    }
+
+    .nebula-blob-purple {
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%);
+        filter: blur(120px);
+        opacity: 0.6;
+        animation: pulse-slow 10s infinite alternate;
+    }
+
+    .nebula-blob-gold {
+        position: absolute;
+        bottom: -10%;
+        right: -10%;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(circle, rgba(234, 179, 8, 0.3), transparent 70%);
+        filter: blur(100px);
+        opacity: 0.5;
+        animation: pulse-slow 12s infinite alternate-reverse;
+    }
+
+    @keyframes pulse-slow {
+        0% { transform: scale(1); opacity: 0.5; }
+        100% { transform: scale(1.1); opacity: 0.7; }
+    }
+
+    /* --- GLASSMORPHISM CARDS --- */
+    .glass-panel {
+        background: rgba(20, 20, 25, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+    }
+
+    /* Акцентная обводка при наведении */
+    .glass-panel:hover {
+        border-color: rgba(167, 139, 250, 0.3); /* Фиолетовая подсветка */
+    }
+
+    .glass-sidebar {
+        background: rgba(10, 10, 12, 0.9); /* Почти непрозрачный для читаемости */
+        backdrop-filter: blur(25px);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* --- UI ЭЛЕМЕНТЫ --- */
+
+    /* Золотая кнопка (Primary Action) */
+    .btn-gold {
+        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        color: #000;
+        font-weight: 700;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        transition: all 0.2s ease;
+    }
+    .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        background: linear-gradient(135deg, #FBBF24 0%, #B45309 100%);
+    }
+    .btn-gold:active { transform: translateY(0); }
+
+    /* Фиолетовая кнопка (Secondary Action) */
+    .btn-purple {
+        background: rgba(139, 92, 246, 0.15);
+        color: #A78BFA;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    .btn-purple:hover {
+        background: rgba(139, 92, 246, 0.25);
+        border-color: #A78BFA;
+        color: #FFF;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Красная кнопка (Destructive) */
+    .btn-red {
+        background: rgba(220, 38, 38, 0.15);
+        color: #F87171;
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    .btn-red:hover {
+        background: rgba(220, 38, 38, 0.25);
+        border-color: #F87171;
+        color: #FFF;
+    }
+
+    /* Меню навигации */
+    .nav-item {
+        color: #9CA3AF;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+    }
+    .nav-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #FFF;
+    }
+    .nav-item.active {
+        background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), transparent);
+        color: #FBBF24; /* Золотой текст */
+        border-left-color: #FBBF24; /* Золотая полоска */
+    }
+
+    /* Инпуты */
+    .input-dark {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        transition: all 0.2s;
+    }
+    .input-dark:focus {
+        border-color: #A78BFA;
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        outline: none;
+    }
+
+    /* Скроллбар */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    /* Адаптивность Sidebar */
+    @media (max-width: 1023px) {
+        .sidebar-mobile-closed { transform: translateX(-100%); }
+        .sidebar-mobile-open { transform: translateX(0); }
+    }
+    </style>
+</head>
+<body class="fade-in text-gray-200">
+
+    <!-- Фон Nebula -->
+    <div class="nebula-bg">
+        <div class="nebula-blob-purple"></div>
+        <div class="nebula-blob-gold"></div>
+    </div>
+
+    <!-- Контейнер -->
+    <div id="app-container" class="w-full h-full">
+        <div id="app" class="flex flex-col h-full w-full"></div>
+    </div>
+
+    <!-- Оверлей моб. меню -->
+    <div id="mobile-menu-overlay" 
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden hidden transition-opacity duration-300 opacity-0"
+        onclick="toggleMobileMenu()">
+    </div>
+
+    <script>
+    const { createIcons, icons } = lucide;
+
+    // --- ГЛОБАЛЬНЫЕ КОНСТАНТЫ (SBP ОПЛАТА) ---
+    const SBP_PHONE = "89779998877";
+    const SBP_BANK_NAME = "ТОЧКА БАНК";
+    const SBP_TOCHKA_LOGO = 'https://placehold.co/100x40/0A0A0A/FFFFFF?text=Точка+Банк+Лого';
+    const SBP_DEFAULT_AMOUNT = 3900;
+
+    // --- Mock Data for Availability (Используется в StudentBookingView) ---
+    const mockAvailability = {
+        // Instructor ID 1: Алексей Иванов
+        1: [
+            { date: '2025-12-20', day: 'ПТ', slots: ['09:00', '11:00', '14:00', '16:00'] },
+            { date: '2025-12-21', day: 'СБ', slots: ['10:00', '12:00', '15:00'] },
+            { date: '2025-12-23', day: 'ПН', slots: ['09:00', '11:00', '14:00', '17:00'] },
+            { date: '2025-12-24', day: 'ВТ', slots: ['10:00', '13:00', '16:00'] },
+            { date: '2025-12-26', day: 'ЧТ', slots: ['09:00', '12:00', '15:00', '18:00'] },
+        ],
+        // Instructor ID 2: Ольга Петрова
+        2: [
+            { date: '2025-12-20', day: 'ПТ', slots: ['08:00', '10:00', '13:00', '15:00'] },
+            { date: '2025-12-22', day: 'ВС', slots: ['09:00', '11:00', '14:00'] },
+            { date: '2025-12-23', day: 'ПН', slots: ['08:00', '12:00', '16:00'] },
+            { date: '2025-12-25', day: 'СР', slots: ['10:00', '13:00', '15:00', '17:00'] },
+            { date: '2025-12-27', day: 'ПТ', slots: ['09:00', '11:00', '14:00'] },
+        ],
+        // Instructor ID 3: Виктор Смирнов
+        3: [
+            { date: '2025-12-20', day: 'ПТ', slots: ['15:00', '17:00', '19:00'] },
+            { date: '2025-12-21', day: 'СБ', slots: ['12:00', '14:00', '16:00', '18:00'] },
+            { date: '2025-12-23', day: 'ПН', slots: ['15:00', '17:00'] },
+            { date: '2025-12-24', day: 'ВТ', slots: ['12:00', '16:00', '18:00'] },
+            { date: '2025-12-26', day: 'ЧТ', slots: ['14:00', '16:00', '18:00'] },
+        ],
+        // Instructor ID 4: Елена Кузнецова
+        4: [
+            { date: '2025-12-20', day: 'ПТ', slots: ['09:00', '11:00', '13:00', '15:00'] },
+            { date: '2025-12-21', day: 'СБ', slots: ['10:00', '12:00', '14:00'] },
+            { date: '2025-12-23', day: 'ПН', slots: ['09:00', '11:00', '13:00'] },
+            { date: '2025-12-25', day: 'СР', slots: ['11:00', '13:00', '15:00', '17:00'] },
+            { date: '2025-12-27', day: 'ПТ', slots: ['10:00', '12:00', '14:00', '16:00'] },
+        ],
+    };
+
+    // --- Mock Student Data ---
+    const mockStudent = {
+        name: 'Иван Петров Сидоров',
+        fullName: 'Сидоров Иван Петрович',
+        email: 'ivan.p@spectr.ru',
+        phone: '+7 (903) 123-45-67',
+        birthDate: '15.03.2000',
+        passport: '4512 123456',
+        address: 'г. Новосибирск, ул. Ленина, д. 10, кв. 25',
+        group: 'А-2025/11',
+        category: 'Категория B',
+        startDate: '01.09.2025',
+        examDate: '25.01.2026',
+        theoryProgress: '90%',
+        drivingHours: 18,
+        totalHours: 56,
+        paymentStatus: 'Оплачено полностью',
+        paidAmount: 45000,
+        totalAmount: 45000,
+        remainingAmount: 0,
+        documents: [
+            { name: 'Медицинская комиссия', status: 'Проверено', date: '2025-10-01', icon: 'stethoscope', color: 'text-green-400' },
+            { name: 'Копия паспорта', status: 'Проверено', date: '2025-10-05', icon: 'id-card', color: 'text-green-400' },
+            { name: 'Копия водительского удостоверения (если есть)', status: 'Не требуется', date: '-', icon: 'driver-license', color: 'text-gray-400' },
+            { name: 'Фотография 3x4', status: 'Проверено', date: '2025-10-05', icon: 'image', color: 'text-green-400' },
+            { name: 'Договор на обучение', status: 'Проверено', date: '2025-11-01', icon: 'file-text', color: 'text-green-400' },
+            { name: 'Квитанция об оплате', status: 'Проверено', date: '2025-11-01', icon: 'receipt', color: 'text-green-400' },
+            { name: 'Справка о прохождении медкомиссии', status: 'Проверено', date: '2025-10-01', icon: 'file-check', color: 'text-green-400' },
+        ],
+        reports: [
+            { date: '2025-12-14', instructor: 'Алексей Иванов', duration: '2 часа', score: 5, notes: 'Отличная работа! Уверенное вождение в городе, правильное использование поворотников, соблюдение ПДД. Парковка задним ходом выполнена идеально.' },
+            { date: '2025-12-12', instructor: 'Алексей Иванов', duration: '2 часа', score: 5, notes: 'Хорошо отработана парковка параллельно. Уверенное движение по кольцу. Небольшие замечания по перестроению в плотном потоке.' },
+            { date: '2025-12-10', instructor: 'Алексей Иванов', duration: '2 часа', score: 5, notes: 'Уверенное движение в потоке, работа над парковкой. Улучшилась оценка дорожной ситуации.' },
+            { date: '2025-12-07', instructor: 'Алексей Иванов', duration: '1.5 часа', score: 4, notes: 'Хорошая работа на площадке. Выезд в город - требуется больше практики с перестроением.' },
+            { date: '2025-12-05', instructor: 'Ольга Петрова', duration: '1.5 часа', score: 4, notes: 'Улучшилось переключение передач. Требуется внимание к зеркалам заднего вида.' },
+            { date: '2025-12-03', instructor: 'Алексей Иванов', duration: '2 часа', score: 5, notes: 'Отличная работа! Освоены все элементы на площадке. Первый выезд в город прошел успешно.' },
+            { date: '2025-11-29', instructor: 'Виктор Смирнов', duration: '2 часа', score: 5, notes: 'Отлично освоил площадку. Готов к городу. Все элементы выполнены без ошибок.' },
+            { date: '2025-11-26', instructor: 'Алексей Иванов', duration: '2 часа', score: 4, notes: 'Хорошая работа над змейкой и параллельной парковкой. Требуется больше практики с эстакадой.' },
+            { date: '2025-11-24', instructor: 'Алексей Иванов', duration: '1.5 часа', score: 4, notes: 'Первое занятие на площадке. Освоены базовые элементы. Нужна практика с точностью выполнения.' },
+        ]
+    };
+
+    // --- Mock Instructor Data ---
+    const mockInstructor = {
+        id: 1,
+        name: 'Алексей Иванов',
+        fullName: 'Иванов Алексей Сергеевич',
+        lastName: 'Иванов',
+        firstName: 'Алексей',
+        middleName: 'Сергеевич',
+        phone: '+7 (905) 987-65-43',
+        email: 'alexey.ivanov@spectr.ru',
+        birthDate: '12.05.1985',
+        passport: '5402 234567',
+        address: 'г. Новосибирск, ул. Красный проспект, д. 15, кв. 42',
+        car: 'Kia Rio (АКПП), гос.номер А123КМ',
+        carYear: 2020,
+        rating: 4.8,
+        exp: '5 лет',
+        category: 'Категория B, C',
+        branch: 'Левый Берег (Оранж)',
+        documents: [
+            { name: 'Водительское удостоверение', status: 'Проверено', date: '2025-01-15', icon: 'driver-license', color: 'text-green-400' },
+            { name: 'Допуск к обучению', status: 'Проверено', date: '2025-01-20', icon: 'certificate', color: 'text-green-400' },
+            { name: 'Медицинская комиссия', status: 'Проверено', date: '2025-11-01', icon: 'stethoscope', color: 'text-green-400' },
+            { name: 'Тех. осмотр ТС', status: 'Ожидает проверки', date: '2025-12-20', icon: 'car-check', color: 'text-yellow-400' },
+            { name: 'Страховка ОСАГО', status: 'Проверено', date: '2025-06-01', icon: 'shield', color: 'text-green-400' },
+            { name: 'Трудовая книжка', status: 'Проверено', date: '2025-01-10', icon: 'briefcase', color: 'text-green-400' },
+        ],
+        students: [
+            { id: 101, name: 'Иван Петров', progress: 85, hours: 18, total: 56, status: 'Активен', lastLesson: '2025-12-14' },
+            { id: 102, name: 'Мария Сидорова', progress: 50, hours: 10, total: 56, status: 'Активен', lastLesson: '2025-12-12' },
+            { id: 103, name: 'Денис Козлов', progress: 100, hours: 25, total: 56, status: 'Завершен', lastLesson: '2025-11-30' },
+            { id: 104, name: 'Анна Смирнова', progress: 65, hours: 15, total: 56, status: 'Активен', lastLesson: '2025-12-13' },
+            { id: 105, name: 'Сергей Волков', progress: 30, hours: 7, total: 56, status: 'Активен', lastLesson: '2025-12-11' },
+            { id: 106, name: 'Елена Кузнецова', progress: 75, hours: 20, total: 56, status: 'Активен', lastLesson: '2025-12-14' },
+            { id: 107, name: 'Дмитрий Новиков', progress: 90, hours: 22, total: 56, status: 'Активен', lastLesson: '2025-12-13' },
+            { id: 108, name: 'Ольга Морозова', progress: 100, hours: 28, total: 56, status: 'Завершен', lastLesson: '2025-12-01' },
+        ],
+        reports: [
+            { month: 'Декабрь 2025', lessons: 38, hours: 76, income: 114000, efficiency: '92%' },
+            { month: 'Ноябрь 2025', lessons: 45, hours: 90, income: 135000, efficiency: '95%' },
+            { month: 'Октябрь 2025', lessons: 50, hours: 105, income: 157500, efficiency: '98%' },
+            { month: 'Сентябрь 2025', lessons: 48, hours: 96, income: 144000, efficiency: '96%' },
+            { month: 'Август 2025', lessons: 42, hours: 84, income: 126000, efficiency: '94%' },
+        ]
+    };
+    
+    // --- Mock Admin Data ---
+    const mockAdmin = {
+        name: 'Главный Администратор',
+        documents: [
+            { name: 'Устав Автошколы', icon: 'file-text', size: '2.5 MB', uploaded: '2025-01-10' },
+            { name: 'Лицензия на обучение', icon: 'certificate', size: '0.8 MB', uploaded: '2025-03-20' },
+            { name: 'Прейскурант услуг (2025)', icon: 'dollar-sign', size: '0.5 MB', uploaded: '2025-12-01' },
+        ],
+        branches: [
+            { name: 'Левый Берег (Оранж)', address: 'ул. Левобережная, 42', instructors: 4, students: 120 },
+            { name: 'Правый Берег (Центр)', address: 'пр-т Мира, 10', instructors: 6, students: 150 },
+        ],
+        stats: {
+            totalStudents: 350,
+            activeInstructors: 15,
+            conversionRate: '45%',
+            monthlyIncome: '4.5M ₽',
+        }
+    };
+
+    // --- STATE ---
+    let state = {
+        userRole: 'student', // Начальная роль: Ученик для демонстрации
+        currentStudentView: 'reports', // Сразу показываем отчеты
+        currentInstructorView: 'students', 
+        currentAdminView: 'documents',
+        isMobileMenuOpen: false, 
+        selectedInstructorId: null, // ID выбранного инструктора для бронирования
+
+        // Модаль оплаты SBP
+        paymentModal: {
+            show: false,
+            amount: 0,
+            itemId: null,
+            itemType: null, // 'lesson', 'course', 'video'
+            instructorName: null,
+            date: null,
+            time: null,
+            itemName: null,
+            isProcessing: false,
+            isSuccess: false,
+        },
+
+        // Mock Data
+        instructors: [
+            { id: 1, name: 'Алексей Иванов', price: 1500, photo: 'https://placehold.co/100x100/4F46E5/FFF?text=АЛЕКСЕЙ', rating: 4.8, car: 'Kia Rio (АКПП)', exp: '5 лет' },
+            { id: 2, name: 'Ольга Петрова', price: 1700, photo: 'https://placehold.co/100x100/C026D3/FFF?text=ОЛЬГА', rating: 4.9, car: 'Hyundai Solaris (МКПП)', exp: '7 лет' },
+            { id: 3, name: 'Виктор Смирнов', price: 1400, photo: 'https://placehold.co/100x100/10B981/FFF?text=ВИКТОР', rating: 4.7, car: 'Lada Granta (АКПП)', exp: '3 года' },
+            { id: 4, name: 'Елена Кузнецова', price: 1600, photo: 'https://placehold.co/100x100/EF4444/FFF?text=ЕЛЕНА', rating: 4.6, car: 'Nissan Juke (АКПП)', exp: '6 лет' },
+        ],
+    };
+
+    // --- UTILITIES ---
+
+    // Функция для рендеринга иконок Lucide
+    function renderIcons(targetElement = document.body) {
+        createIcons({ icons, attrs: { class: 'lucide' }, nameAttr: 'data-icon', tag: 'svg', target: targetElement });
+    }
+
+    // Рендер главного приложения
+    function render() {
+        document.getElementById('app').innerHTML = App();
+        // Рендер иконок после обновления DOM
+        renderIcons(document.getElementById('app'));
+        // Также рендерим иконки в модальном окне, если оно есть
+        const modal = document.getElementById('payment-modal-overlay');
+        if (modal) {
+            renderIcons(modal);
+        }
+    }
+
+    // Установка новой роли и сброс вида
+    function setUserRole(role) {
+        state.userRole = role;
+        // Установка начального вида для каждой роли
+        state.currentStudentView = 'reports'; 
+        state.currentInstructorView = 'students'; 
+        state.currentAdminView = 'documents';
+        render();
+    }
+
+    // Изменение вида ученика
+    function setStudentView(view) {
+        state.currentStudentView = view;
+        state.isMobileMenuOpen = false;
+        render();
+    }
+
+    // Изменение вида инструктора
+    function setInstructorView(view) {
+        state.currentInstructorView = view;
+        state.isMobileMenuOpen = false;
+        render();
+    }
+
+    // Изменение вида администратора
+    function setAdminView(view) {
+        state.currentAdminView = view;
+        state.isMobileMenuOpen = false;
+        render();
+    }
+
+    // Переключение мобильного меню
+    function toggleMobileMenu() {
+        state.isMobileMenuOpen = !state.isMobileMenuOpen;
+        render();
+    }
+
+    // Открытие модального окна SBP
+    function openPaymentModal(amount, itemId, itemType, instructorName = null, date = null, time = null, itemName = null) {
+        state.paymentModal = {
+            show: true,
+            amount: amount,
+            itemId: itemId,
+            itemType: itemType,
+            instructorName: instructorName,
+            date: date,
+            time: time,
+            itemName: itemName,
+            isProcessing: false,
+            isSuccess: false,
+        };
+        render();
+    }
+
+    // Закрытие модального окна
+    function closePaymentModal() {
+        state.paymentModal.show = false;
+        state.paymentModal.isProcessing = false;
+        state.paymentModal.isSuccess = false;
+        render();
+    }
+
+    // Эмуляция успешной оплаты
+    function simulatePayment() {
+        state.paymentModal.isProcessing = true;
+        render();
+        
+        // Эмуляция процесса оплаты (3 секунды)
+        setTimeout(() => {
+            state.paymentModal.isProcessing = false;
+            state.paymentModal.isSuccess = true;
+            render();
+            
+            // Автоматическое закрытие через 3 секунды после успеха
+            setTimeout(() => {
+                closePaymentModal();
+                alert('Оплата успешно завершена!');
+            }, 3000);
+        }, 3000);
+    }
+
+    // Копирование текста в буфер обмена
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            console.log('Номер скопирован: ' + text); 
+            alert('Номер скопирован: ' + text);
+        } catch (err) {
+            // Fallback для старых браузеров
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            console.log('Номер скопирован: ' + text); 
+            alert('Номер скопирован: ' + text);
+        }
+    }
+
+    // --- VIEWS (СТРАНИЦЫ) ---
+
+    // Вспомогательный компонент для пустых страниц
+    function EmptyView(title, subtitle) {
+        return `
+            <div class="p-6 md:p-10 flex flex-col items-center justify-center h-full text-center">
+                <div class="glass-panel p-8 rounded-xl max-w-lg w-full">
+                    <svg data-icon="construction" class="w-16 h-16 mx-auto text-yellow-500 mb-4"></svg>
+                    <h2 class="text-3xl font-bold mb-2 text-white">${title}</h2>
+                    <p class="text-gray-400">${subtitle}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // --- STUDENT VIEWS ---
+    
+    function StudentReportsView() {
+        // Функция для показа деталей (понадобится в глобальном скоупе)
+        window.showReportDetails = function(date) {
+            const id = `details-${date.replace(/-/g, '')}`;
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.toggle('hidden');
+            }
+        }
+        
+        const reportList = mockStudent.reports.map(report => `
+            <div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                <div class="mb-2 md:mb-0">
+                    <p class="text-lg font-semibold text-yellow-400">${report.date} - ${report.duration}</p>
+                    <p class="text-sm text-gray-400">Инструктор: ${report.instructor}</p>
+                </div>
+                <div class="flex flex-col md:flex-row md:items-center">
+                    <div class="flex items-center text-xl font-bold mr-4">
+                        <svg data-icon="star" class="w-5 h-5 text-purple-400 mr-1 fill-purple-400"></svg>
+                        ${report.score} / 5
+                    </div>
+                    <button onclick="showReportDetails('${report.date}')" class="btn-purple py-1 px-3 text-sm rounded-lg mt-2 md:mt-0">
+                        Подробнее
+                    </button>
+                </div>
+                <div id="details-${report.date.replace(/-/g, '')}" class="hidden w-full mt-3 pt-3 border-t border-gray-700">
+                    <p class="text-sm text-gray-300 font-semibold mb-1">Комментарий инструктора:</p>
+                    <p class="text-sm text-gray-400">${report.notes}</p>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мои Отчеты по Вождению</h1>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Всего часов вождения</div>
+                        <div class="text-3xl font-bold text-yellow-400">${mockStudent.drivingHours} из ${mockStudent.totalHours}</div>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5 mt-2">
+                            <div class="bg-purple-500 h-2.5 rounded-full" style="width: ${Math.round((mockStudent.drivingHours / mockStudent.totalHours) * 100)}%"></div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Средний балл</div>
+                        <div class="text-3xl font-bold text-yellow-400">${mockStudent.reports.length > 0 ? (mockStudent.reports.reduce((sum, r) => sum + r.score, 0) / mockStudent.reports.length).toFixed(1) : '0.0'} / 5.0</div>
+                        <p class="text-sm text-gray-400 mt-1">Основано на ${mockStudent.reports.length} занятиях</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Дата экзамена</div>
+                        <div class="text-3xl font-bold text-purple-400">25.01.2026</div>
+                        <p class="text-sm text-gray-400 mt-1">Подготовка идет по плану</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold mb-4 text-white">Журнал занятий</h2>
+                <div class="bg-gray-900/50 p-4 rounded-xl shadow-lg">
+                    ${reportList}
+                    <div class="text-center mt-6">
+                        <button class="btn-purple py-2 px-6 rounded-lg">Загрузить больше отчетов</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function StudentProfileView() {
+        const progressPercent = Math.round((mockStudent.drivingHours / mockStudent.totalHours) * 100);
+        const avgScore = mockStudent.reports.length > 0 
+            ? (mockStudent.reports.reduce((sum, r) => sum + r.score, 0) / mockStudent.reports.length).toFixed(1)
+            : '0.0';
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мой Профиль</h1>
+                
+                <div class="glass-panel p-6 md:p-10 rounded-xl shadow-xl">
+                    <div class="flex flex-col md:flex-row items-center md:items-start mb-8 border-b border-gray-700/50 pb-6">
+                        <img src="https://placehold.co/120x120/4F46E5/FFF?text=И.П." alt="Фото профиля" class="rounded-full w-24 h-24 mb-4 md:mb-0 md:mr-6 border-4 border-purple-500">
+                        <div class="text-center md:text-left">
+                            <h2 class="text-3xl font-bold text-white">${mockStudent.fullName || mockStudent.name}</h2>
+                            <p class="text-lg text-gray-400">Группа: ${mockStudent.group}</p>
+                            <p class="text-sm text-gray-500 mt-2">${mockStudent.category || 'Ученик, Категория B'}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                        <!-- Личные данные -->
+                        <div>
+                            <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+                                <svg data-icon="user" class="w-5 h-5 mr-2"></svg>
+                                Личные данные
+                            </h3>
+                            <div class="space-y-3 text-gray-300">
+                                <p class="flex items-center"><svg data-icon="mail" class="w-4 h-4 mr-2 text-purple-400"></svg>${mockStudent.email}</p>
+                                <p class="flex items-center"><svg data-icon="phone" class="w-4 h-4 mr-2 text-purple-400"></svg>${mockStudent.phone}</p>
+                                <p class="flex items-center"><svg data-icon="calendar" class="w-4 h-4 mr-2 text-purple-400"></svg>Дата рождения: ${mockStudent.birthDate || 'Не указано'}</p>
+                                <p class="flex items-center"><svg data-icon="id-card" class="w-4 h-4 mr-2 text-purple-400"></svg>Паспорт: ${mockStudent.passport || 'Не указано'}</p>
+                                <p class="flex items-center"><svg data-icon="map-pin" class="w-4 h-4 mr-2 text-purple-400"></svg>${mockStudent.address || 'Филиал: Левый Берег (Оранж)'}</p>
+                            </div>
+                        </div>
+
+                        <!-- Прогресс обучения -->
+                        <div>
+                            <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+                                <svg data-icon="target" class="w-5 h-5 mr-2"></svg>
+                                Прогресс Обучения
+                            </h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-sm font-semibold mb-1">Теория: ${mockStudent.theoryProgress}</p>
+                                    <div class="w-full bg-gray-700 rounded-full h-3">
+                                        <div class="bg-purple-500 h-3 rounded-full" style="width: ${parseInt(mockStudent.theoryProgress)}%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold mb-1">Практика (Часы): ${mockStudent.drivingHours} из ${mockStudent.totalHours}</p>
+                                    <div class="w-full bg-gray-700 rounded-full h-3">
+                                        <div class="bg-yellow-500 h-3 rounded-full" style="width: ${progressPercent}%"></div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-gray-700/50">
+                                    <p class="text-sm text-gray-400 mb-1">Дата начала: ${mockStudent.startDate || '01.09.2025'}</p>
+                                    <p class="text-sm text-gray-400 mb-1">Дата экзамена: ${mockStudent.examDate || '25.01.2026'}</p>
+                                    <p class="text-sm text-gray-400">Средний балл: <span class="text-yellow-400 font-bold">${avgScore} / 5.0</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Оплата -->
+                        <div>
+                            <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+                                <svg data-icon="dollar-sign" class="w-5 h-5 mr-2"></svg>
+                                Финансовый Статус
+                            </h3>
+                            <div class="glass-panel p-4 rounded-lg bg-green-900/30 border-green-700">
+                                <p class="text-lg font-bold text-white">Статус: ${mockStudent.paymentStatus}</p>
+                                <div class="mt-3 space-y-2 text-sm">
+                                    <p class="flex justify-between"><span class="text-gray-400">Оплачено:</span> <span class="text-green-300 font-semibold">${mockStudent.paidAmount || 45000} ₽</span></p>
+                                    <p class="flex justify-between"><span class="text-gray-400">Общая сумма:</span> <span class="text-white font-semibold">${mockStudent.totalAmount || 45000} ₽</span></p>
+                                    <p class="flex justify-between"><span class="text-gray-400">Остаток:</span> <span class="text-green-300 font-semibold">${mockStudent.remainingAmount || 0} ₽</span></p>
+                                </div>
+                                <button onclick="openPaymentModal(SBP_DEFAULT_AMOUNT, null, 'course')" class="btn-gold mt-4 w-full py-2 rounded-lg text-sm">Посмотреть детали оплаты</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function StudentDocumentsView() {
+        const documentList = mockStudent.documents.map(doc => {
+            const statusClass = doc.status === 'Проверено' ? 'bg-green-600' : 
+                                doc.status === 'Ожидает проверки' ? 'bg-yellow-600' : 
+                                'bg-red-600';
+            const statusTextClass = doc.status === 'Проверено' ? 'text-green-300' : 
+                                    doc.status === 'Ожидает проверки' ? 'text-yellow-300' : 
+                                    'text-red-300';
+            
+            return `
+                <div class="glass-panel p-4 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                    <div class="flex items-center mb-2 sm:mb-0">
+                        <svg data-icon="${doc.icon}" class="w-6 h-6 mr-4 ${doc.color}"></svg>
+                        <div>
+                            <p class="text-lg font-semibold text-white">${doc.name}</p>
+                            <p class="text-xs text-gray-500">Загружено: ${doc.date}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="py-1 px-3 text-xs font-medium rounded-full ${statusClass} ${statusTextClass}">
+                            ${doc.status}
+                        </span>
+                        <button class="btn-purple py-1 px-3 text-sm rounded-lg">
+                            <svg data-icon="download" class="w-4 h-4"></svg>
+                        </button>
+                        <button class="btn-gold py-1 px-3 text-sm rounded-lg">
+                            <svg data-icon="upload" class="w-4 h-4"></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мои Документы</h1>
+                <p class="text-gray-400 mb-6">Здесь вы можете управлять вашими документами, необходимыми для обучения в автошколе. Убедитесь, что все документы проверены.</p>
+                
+                <div class="bg-gray-900/50 p-4 rounded-xl shadow-lg">
+                    ${documentList}
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn-gold py-3 px-8 rounded-xl text-lg flex items-center mx-auto">
+                        <svg data-icon="file-plus" class="w-6 h-6 mr-2"></svg>
+                        Загрузить новый документ
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function StudentBookingView() {
+        const selectedInstructorId = state.selectedInstructorId;
+        const selectedInstructor = state.instructors.find(inst => inst.id === selectedInstructorId);
+        const availability = selectedInstructorId ? (mockAvailability[selectedInstructorId] || []) : [];
+
+        const instructorCards = state.instructors.map(inst => `
+            <div onclick="state.selectedInstructorId = ${inst.id}; render();" 
+                class="glass-panel p-5 rounded-xl cursor-pointer transition-all hover:border-purple-500 ${selectedInstructorId === inst.id ? 'border-2 border-yellow-500' : ''}">
+                <div class="flex items-center mb-4">
+                    <img src="${inst.photo}" alt="${inst.name}" class="w-16 h-16 rounded-full mr-4 border-2 border-purple-500">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-white">${inst.name}</h3>
+                        <div class="flex items-center mt-1">
+                            <svg data-icon="star" class="w-4 h-4 text-yellow-400 mr-1 fill-yellow-400"></svg>
+                            <span class="text-sm text-gray-400">${inst.rating}</span>
+                            <span class="text-sm text-gray-500 ml-2">• ${inst.exp}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <p class="text-gray-300"><svg data-icon="car" class="w-4 h-4 inline mr-1 text-purple-400"></svg>${inst.car}</p>
+                    <p class="text-yellow-400 font-semibold"><svg data-icon="dollar-sign" class="w-4 h-4 inline mr-1"></svg>${inst.price} ₽/час</p>
+                </div>
+            </div>
+        `).join('');
+
+        const availabilitySlots = availability.map(day => `
+            <div class="glass-panel p-4 rounded-xl mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <div>
+                        <p class="text-lg font-bold text-white">${day.date}</p>
+                        <p class="text-sm text-gray-400">${day.day}</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    ${day.slots.map(slot => `
+                        <button onclick="openPaymentModal(${selectedInstructor?.price || 1500}, ${selectedInstructorId}, 'lesson', '${selectedInstructor?.name || ''}', '${day.date}', '${slot}', 'Занятие по вождению')" 
+                            class="btn-purple py-2 px-3 text-sm rounded-lg hover:bg-purple-600">
+                            ${slot}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Запись на Вождение</h1>
+                <p class="text-gray-400 mb-6">Выберите инструктора и доступное время для записи на практическое занятие.</p>
+                
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-yellow-400 mb-4">Выберите инструктора</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${instructorCards}
+                    </div>
+                </div>
+
+                ${selectedInstructorId ? `
+                    <div class="mt-8">
+                        <h2 class="text-2xl font-bold text-yellow-400 mb-4">Доступное время - ${selectedInstructor?.name || ''}</h2>
+                        ${availability.length > 0 ? `
+                            <div>
+                                ${availabilitySlots}
+                            </div>
+                        ` : `
+                            <div class="glass-panel p-8 rounded-xl text-center">
+                                <svg data-icon="calendar-x" class="w-16 h-16 mx-auto text-gray-500 mb-4"></svg>
+                                <p class="text-gray-400">Нет доступных слотов на ближайшие дни</p>
+                            </div>
+                        `}
+                    </div>
+                ` : `
+                    <div class="glass-panel p-8 rounded-xl text-center">
+                        <svg data-icon="user-check" class="w-16 h-16 mx-auto text-purple-400 mb-4"></svg>
+                        <p class="text-gray-400 text-lg">Выберите инструктора выше, чтобы увидеть доступное время</p>
+                    </div>
+                `}
+            </div>
+        `;
+    }
+
+    function StudentScheduleView() {
+        const schedule = [
+            { date: '2025-12-20', time: '14:00', instructor: 'Алексей Иванов', type: 'Практика', status: 'Запланировано', car: 'Kia Rio' },
+            { date: '2025-12-22', time: '10:00', instructor: 'Ольга Петрова', type: 'Практика', status: 'Запланировано', car: 'Hyundai Solaris' },
+            { date: '2025-12-24', time: '16:00', instructor: 'Алексей Иванов', type: 'Практика', status: 'Запланировано', car: 'Kia Rio' },
+            { date: '2025-12-26', time: '11:00', instructor: 'Елена Кузнецова', type: 'Практика', status: 'Запланировано', car: 'Nissan Juke' },
+        ];
+
+        const scheduleList = schedule.map(item => `
+            <div class="glass-panel p-5 rounded-xl mb-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="mb-3 md:mb-0">
+                        <div class="flex items-center mb-2">
+                            <svg data-icon="calendar" class="w-5 h-5 text-purple-400 mr-2"></svg>
+                            <span class="text-xl font-bold text-white">${item.date}</span>
+                            <span class="text-lg text-gray-400 ml-2">${item.time}</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-gray-300 ml-7">
+                            <p><svg data-icon="user" class="w-4 h-4 inline mr-1"></svg>Инструктор: ${item.instructor}</p>
+                            <p><svg data-icon="car" class="w-4 h-4 inline mr-1"></svg>Автомобиль: ${item.car}</p>
+                            <p><svg data-icon="book-open" class="w-4 h-4 inline mr-1"></svg>Тип: ${item.type}</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="py-1 px-3 text-xs font-medium rounded-full bg-green-600 text-green-300 mb-2">
+                            ${item.status}
+                        </span>
+                        <button class="btn-purple py-2 px-4 text-sm rounded-lg">Отменить</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мое Расписание</h1>
+                <p class="text-gray-400 mb-6">Ваши запланированные занятия по вождению.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Запланировано занятий</div>
+                        <div class="text-3xl font-bold text-yellow-400">${schedule.length}</div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Ближайшее занятие</div>
+                        <div class="text-xl font-bold text-purple-400">20.12.2025</div>
+                        <p class="text-sm text-gray-400 mt-1">14:00 - Алексей Иванов</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Всего часов запланировано</div>
+                        <div class="text-3xl font-bold text-yellow-400">${schedule.length * 2} ч</div>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold mb-4 text-white">Ближайшие занятия</h2>
+                <div>
+                    ${scheduleList}
+                </div>
+            </div>
+        `;
+    }
+
+    function StudentVideoCoursesView() {
+        const courses = [
+            { title: 'Основы ПДД', lessons: 12, progress: 85, icon: 'book-open', color: 'text-blue-400' },
+            { title: 'Дорожные знаки', lessons: 8, progress: 100, icon: 'map', color: 'text-green-400' },
+            { title: 'Управление автомобилем', lessons: 10, progress: 60, icon: 'car', color: 'text-purple-400' },
+            { title: 'Парковка и маневрирование', lessons: 6, progress: 40, icon: 'car', color: 'text-yellow-400' },
+            { title: 'Безопасность на дороге', lessons: 9, progress: 30, icon: 'shield', color: 'text-red-400' },
+            { title: 'Подготовка к экзамену', lessons: 15, progress: 20, icon: 'award', color: 'text-indigo-400' },
+        ];
+
+        const courseCards = courses.map(course => `
+            <div class="glass-panel p-6 rounded-xl">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center">
+                        <svg data-icon="${course.icon}" class="w-8 h-8 ${course.color} mr-3"></svg>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">${course.title}</h3>
+                            <p class="text-sm text-gray-400">${course.lessons} уроков</p>
+                        </div>
+                    </div>
+                    <span class="text-lg font-bold ${course.color}">${course.progress}%</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-2 mb-4">
+                    <div class="${course.color.replace('text-', 'bg-')} h-2 rounded-full" style="width: ${course.progress}%"></div>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="openPaymentModal(500, '${course.title}', 'video', null, null, null, '${course.title} - 1 урок')" 
+                        class="btn-gold flex-1 py-2 rounded-lg text-sm">
+                        <svg data-icon="credit-card" class="w-4 h-4 inline mr-1"></svg>
+                        Купить урок (500₽)
+                    </button>
+                    <button class="btn-purple flex-1 py-2 rounded-lg text-sm">Продолжить</button>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Видеокурсы</h1>
+                <p class="text-gray-400 mb-6">Онлайн-доступ к теоретическим видеоурокам для подготовки к экзамену.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${courseCards}
+                </div>
+            </div>
+        `;
+    }
+
+    function StudentBranchesView() {
+        const branches = [
+            { name: 'Левый Берег (Оранж)', address: 'ул. Левобережная, д. 42', phone: '+7 (383) 123-45-67', hours: 'Пн-Вс: 9:00 - 21:00', instructors: 4, students: 120 },
+            { name: 'Правый Берег (Центр)', address: 'пр-т Мира, д. 10', phone: '+7 (383) 234-56-78', hours: 'Пн-Вс: 9:00 - 21:00', instructors: 6, students: 150 },
+            { name: 'Заельцовский район', address: 'ул. Заельцовская, д. 15', phone: '+7 (383) 345-67-89', hours: 'Пн-Сб: 10:00 - 20:00', instructors: 3, students: 80 },
+        ];
+
+        const branchCards = branches.map(branch => `
+            <div class="glass-panel p-6 rounded-xl">
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4">${branch.name}</h3>
+                <div class="space-y-3 text-gray-300 mb-4">
+                    <p class="flex items-center">
+                        <svg data-icon="map-pin" class="w-5 h-5 mr-2 text-purple-400"></svg>
+                        ${branch.address}
+                    </p>
+                    <p class="flex items-center">
+                        <svg data-icon="phone" class="w-5 h-5 mr-2 text-purple-400"></svg>
+                        ${branch.phone}
+                    </p>
+                    <p class="flex items-center">
+                        <svg data-icon="clock" class="w-5 h-5 mr-2 text-purple-400"></svg>
+                        ${branch.hours}
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-700">
+                    <div>
+                        <p class="text-sm text-gray-400">Инструкторов</p>
+                        <p class="text-xl font-bold text-purple-400">${branch.instructors}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400">Учеников</p>
+                        <p class="text-xl font-bold text-yellow-400">${branch.students}</p>
+                    </div>
+                </div>
+                <button class="btn-gold w-full py-2 rounded-lg mt-4">Посмотреть на карте</button>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Филиалы Автошколы</h1>
+                <p class="text-gray-400 mb-6">Информация о наших учебных точках и контактные данные.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${branchCards}
+                </div>
+            </div>
+        `;
+    }
+    
+    // --- INSTRUCTOR VIEWS ---
+
+    function InstructorReportsView() {
+        const reportList = mockInstructor.reports.map(report => `
+            <div class="glass-panel p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                <div class="mb-2 md:mb-0">
+                    <p class="text-lg font-semibold text-white">${report.month}</p>
+                    <p class="text-sm text-gray-400">${report.lessons} занятий, ${report.hours} часов</p>
+                </div>
+                <div class="flex flex-col md:flex-row md:items-center space-x-4">
+                    <span class="text-xl font-bold text-yellow-400">Доход: ${report.income} ₽</span>
+                    <span class="py-1 px-3 text-xs font-medium rounded-full bg-purple-600 text-purple-300">
+                        Эффективность: ${report.efficiency}
+                    </span>
+                    <button class="btn-purple py-1 px-3 text-sm rounded-lg mt-2 md:mt-0">
+                        Детальный отчет
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Моя Отчетность</h1>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Часов в текущем месяце</div>
+                        <div class="text-3xl font-bold text-yellow-400">${mockInstructor.reports[0]?.hours || 76} ч</div>
+                        <p class="text-sm text-gray-400 mt-1">План: 100 ч</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Средняя оценка учеников</div>
+                        <div class="text-3xl font-bold text-purple-400">${mockInstructor.rating} / 5.0</div>
+                        <p class="text-sm text-gray-400 mt-1">Высокий результат!</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Ближайшая выплата</div>
+                        <div class="text-3xl font-bold text-yellow-400">${mockInstructor.reports[0]?.income || 114000} ₽</div>
+                        <p class="text-sm text-gray-400 mt-1">Ожидается 25 декабря</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold mb-4 text-white">Архив месячных отчетов</h2>
+                <div class="bg-gray-900/50 p-4 rounded-xl shadow-lg">
+                    ${reportList}
+                </div>
+            </div>
+        `;
+    }
+
+    function InstructorStudentsView() {
+        const studentCards = mockInstructor.students.map(student => `
+            <div class="glass-panel p-5 rounded-xl flex flex-col items-center text-center">
+                <img src="https://placehold.co/80x80/4F46E5/FFF?text=У${student.id}" alt="Фото ученика" class="rounded-full w-20 h-20 mb-3 border-2 border-purple-500">
+                <p class="text-lg font-semibold text-white">${student.name}</p>
+                <p class="text-sm text-gray-400 mb-2">ID: ${student.id}</p>
+                <span class="py-1 px-3 text-xs font-medium rounded-full ${student.status === 'Активен' ? 'bg-green-600 text-green-300' : 'bg-gray-600 text-gray-300'} mb-3">
+                    ${student.status}
+                </span>
+                
+                <div class="w-full mb-3">
+                    <p class="text-xs font-semibold mb-1">Прогресс вождения: ${student.hours} / ${student.total} ч (${Math.round((student.hours / student.total) * 100)}%)</p>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="bg-yellow-500 h-2 rounded-full" style="width: ${Math.round((student.hours / student.total) * 100)}%"></div>
+                    </div>
+                </div>
+                
+                ${student.lastLesson ? `<p class="text-xs text-gray-500 mb-3">Последнее занятие: ${student.lastLesson}</p>` : ''}
+
+                <button class="btn-gold w-full py-2 text-sm rounded-lg mt-2">
+                    Открыть карточку
+                </button>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мои Ученики</h1>
+                <p class="text-gray-400 mb-6">Список ваших текущих учеников и их карточки прогресса. Вы можете быстро просмотреть их успехи и перейти к добавлению отчетов.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    ${studentCards}
+                    
+                    <!-- Добавить ученика -->
+                    <div class="glass-panel p-5 rounded-xl flex flex-col items-center text-center justify-center border-dashed border-2 border-gray-700/50 hover:border-purple-500 transition duration-300 cursor-pointer">
+                        <svg data-icon="user-plus" class="w-10 h-10 text-purple-400 mb-3"></svg>
+                        <p class="text-lg font-semibold text-purple-400">Добавить Ученика</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function InstructorProfileView() {
+        const docList = mockInstructor.documents.map(doc => {
+            const statusClass = doc.status === 'Проверено' ? 'bg-green-600' : 
+                                doc.status === 'Ожидает проверки' ? 'bg-yellow-600' : 
+                                doc.status === 'Не проверено' ? 'bg-red-600' :
+                                'bg-gray-600';
+            const statusTextClass = doc.status === 'Проверено' ? 'text-green-300' : 
+                                    doc.status === 'Ожидает проверки' ? 'text-yellow-300' : 
+                                    doc.status === 'Не проверено' ? 'text-red-300' :
+                                    'text-gray-300';
+            
+            return `
+                <li class="flex justify-between items-center py-3 border-b border-gray-700/50 last:border-b-0">
+                    <div class="flex items-center flex-1">
+                        <svg data-icon="${doc.icon}" class="w-5 h-5 mr-3 text-purple-400"></svg>
+                        <div class="flex-1">
+                            <span class="text-gray-300">${doc.name}</span>
+                            ${doc.date ? `<p class="text-xs text-gray-500 mt-1">Дата: ${doc.date}</p>` : ''}
+                        </div>
+                    </div>
+                    <span class="py-1 px-3 text-xs font-medium rounded-full ${statusClass} ${statusTextClass} ml-4">
+                        ${doc.status}
+                    </span>
+                </li>
+            `;
+        }).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мой Профиль Инструктора</h1>
+                
+                <div class="glass-panel p-6 md:p-10 rounded-xl shadow-xl">
+                    <div class="flex flex-col md:flex-row items-center md:items-start mb-8 border-b border-gray-700/50 pb-6">
+                        <img src="https://placehold.co/120x120/4F46E5/FFF?text=А.И." alt="Фото профиля" class="rounded-full w-24 h-24 mb-4 md:mb-0 md:mr-6 border-4 border-yellow-500">
+                        <div class="text-center md:text-left">
+                            <h2 class="text-3xl font-bold text-white">${mockInstructor.fullName}</h2>
+                            <p class="text-lg text-yellow-400">Инструктор высшей категории</p>
+                            <div class="flex items-center justify-center md:justify-start mt-2 text-gray-400">
+                                <svg data-icon="star" class="w-4 h-4 mr-1 text-purple-400 fill-purple-400"></svg>
+                                <span class="text-sm">${mockInstructor.rating} | Опыт: ${mockInstructor.exp}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        <!-- Личные данные -->
+                        <div>
+                            <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+                                <svg data-icon="user" class="w-5 h-5 mr-2"></svg>
+                                Личные данные
+                            </h3>
+                            <div class="space-y-3 text-gray-300">
+                                <p class="flex items-center"><svg data-icon="user" class="w-4 h-4 mr-2 text-purple-400"></svg>ФИО: ${mockInstructor.lastName} ${mockInstructor.firstName} ${mockInstructor.middleName}</p>
+                                <p class="flex items-center"><svg data-icon="phone" class="w-4 h-4 mr-2 text-purple-400"></svg>Телефон: ${mockInstructor.phone}</p>
+                                <p class="flex items-center"><svg data-icon="mail" class="w-4 h-4 mr-2 text-purple-400"></svg>Email: ${mockInstructor.email || 'Не указан'}</p>
+                                <p class="flex items-center"><svg data-icon="calendar" class="w-4 h-4 mr-2 text-purple-400"></svg>Дата рождения: ${mockInstructor.birthDate || 'Не указано'}</p>
+                                <p class="flex items-center"><svg data-icon="id-card" class="w-4 h-4 mr-2 text-purple-400"></svg>Паспорт: ${mockInstructor.passport || 'Не указано'}</p>
+                                <p class="flex items-center"><svg data-icon="map-pin" class="w-4 h-4 mr-2 text-purple-400"></svg>Адрес: ${mockInstructor.address || 'Не указано'}</p>
+                            </div>
+                        </div>
+
+                        <!-- Рабочая информация -->
+                        <div>
+                            <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+                                <svg data-icon="briefcase" class="w-5 h-5 mr-2"></svg>
+                                Рабочая информация
+                            </h3>
+                            <div class="space-y-3 text-gray-300">
+                                <p class="flex items-center"><svg data-icon="car" class="w-4 h-4 mr-2 text-purple-400"></svg>Автомобиль: ${mockInstructor.car}</p>
+                                <p class="flex items-center"><svg data-icon="calendar" class="w-4 h-4 mr-2 text-purple-400"></svg>Год выпуска ТС: ${mockInstructor.carYear || 'Не указано'}</p>
+                                <p class="flex items-center"><svg data-icon="map-pin" class="w-4 h-4 mr-2 text-purple-400"></svg>Филиал: ${mockInstructor.branch || 'Левый Берег'}</p>
+                                <p class="flex items-center"><svg data-icon="award" class="w-4 h-4 mr-2 text-purple-400"></svg>Категории: ${mockInstructor.category || 'Категория B'}</p>
+                                <p class="flex items-center"><svg data-icon="clock" class="w-4 h-4 mr-2 text-purple-400"></svg>Опыт работы: ${mockInstructor.exp}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Документы -->
+                    <div>
+                        <h3 class="text-xl font-bold text-yellow-400 mb-4 flex items-center">
+                            <svg data-icon="file-text" class="w-5 h-5 mr-2"></svg>
+                            Рабочие Документы (Статус проверки)
+                        </h3>
+                        <ul class="glass-panel p-4 rounded-lg space-y-2">
+                            ${docList}
+                        </ul>
+                        <button class="btn-purple py-2 px-4 rounded-lg text-sm mt-4 w-full">Управление документами</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function InstructorServiceView() {
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Сервис и Поддержка</h1>
+                <p class="text-gray-400 mb-8">Раздел для инструментов и полезных контактов.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Полезный Контакт: Массажный Салон Орандж -->
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                            <svg data-icon="heart-handshake" class="w-6 h-6 mr-3"></svg>
+                            Партнерская Программа: Релакс
+                        </h2>
+                        <p class="text-gray-300 mb-4">
+                            Для снятия стресса после долгих часов на дороге — специальные скидки для наших инструкторов.
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg border border-purple-500/50 mb-4">
+                            <p class="text-lg font-semibold text-white mb-3">Массажный Салон "Орандж"</p>
+                            <div class="space-y-2 text-sm">
+                                <p class="flex items-start">
+                                    <svg data-icon="map-pin" class="w-4 h-4 mr-2 text-purple-400 mt-0.5 flex-shrink-0"></svg>
+                                    <span class="text-gray-300">Левый Берег, ул. Левобережная, д. 42 (рядом с филиалом автошколы)</span>
+                                </p>
+                                <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-700">
+                                    <div class="flex items-center">
+                                        <svg data-icon="phone" class="w-4 h-4 mr-2 text-purple-400"></svg>
+                                        <span class="text-white font-mono">+7 (913) 555-44-33</span>
+                                    </div>
+                                    <button onclick="copyToClipboard('+79135554433')" class="btn-purple py-1 px-3 text-xs rounded-lg">
+                                        <svg data-icon="clipboard" class="w-3 h-3 mr-1"></svg>
+                                        Копировать
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-900/20 border border-yellow-700/50 p-3 rounded-lg mb-4">
+                            <p class="text-sm text-yellow-300">
+                                <svg data-icon="gift" class="w-4 h-4 inline mr-1"></svg>
+                                Скидка 15% для инструкторов автошколы "Спектр"
+                            </p>
+                        </div>
+                        <button class="btn-purple py-2 px-4 rounded-lg text-sm w-full">Получить промокод</button>
+                    </div>
+
+                    <!-- Инструменты -->
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                            <svg data-icon="tools" class="w-6 h-6 mr-3"></svg>
+                            Инструменты Инструктора
+                        </h2>
+                        <div class="space-y-4">
+                            <button class="btn-purple w-full py-3 rounded-lg flex items-center justify-center">
+                                <svg data-icon="clipboard-pen" class="w-5 h-5 mr-2"></svg>
+                                Быстрое добавление отчета
+                            </button>
+                            <button class="btn-purple w-full py-3 rounded-lg flex items-center justify-center">
+                                <svg data-icon="wrench" class="w-5 h-5 mr-2"></svg>
+                                Заявка на ТО автомобиля
+                            </button>
+                            <button class="btn-red w-full py-3 rounded-lg flex items-center justify-center">
+                                <svg data-icon="help-circle" class="w-5 h-5 mr-2"></svg>
+                                Чат с Администрацией
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function InstructorScheduleView() {
+        const schedule = [
+            { date: '2025-12-20', time: '09:00', student: 'Иван Петров', duration: '2 часа', status: 'Запланировано' },
+            { date: '2025-12-20', time: '14:00', student: 'Анна Смирнова', duration: '2 часа', status: 'Запланировано' },
+            { date: '2025-12-21', time: '10:00', student: 'Сергей Волков', duration: '1.5 часа', status: 'Запланировано' },
+            { date: '2025-12-21', time: '15:00', student: 'Елена Кузнецова', duration: '2 часа', status: 'Запланировано' },
+            { date: '2025-12-23', time: '09:00', student: 'Дмитрий Новиков', duration: '2 часа', status: 'Запланировано' },
+            { date: '2025-12-23', time: '14:00', student: 'Иван Петров', duration: '2 часа', status: 'Запланировано' },
+            { date: '2025-12-24', time: '10:00', student: 'Мария Сидорова', duration: '1.5 часа', status: 'Запланировано' },
+            { date: '2025-12-24', time: '16:00', student: 'Иван Петров', duration: '2 часа', status: 'Запланировано' },
+        ];
+
+        const scheduleList = schedule.map(item => `
+            <div class="glass-panel p-5 rounded-xl mb-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="mb-3 md:mb-0">
+                        <div class="flex items-center mb-2">
+                            <svg data-icon="calendar" class="w-5 h-5 text-purple-400 mr-2"></svg>
+                            <span class="text-xl font-bold text-white">${item.date}</span>
+                            <span class="text-lg text-gray-400 ml-2">${item.time}</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-gray-300 ml-7">
+                            <p><svg data-icon="user" class="w-4 h-4 inline mr-1"></svg>Ученик: ${item.student}</p>
+                            <p><svg data-icon="clock" class="w-4 h-4 inline mr-1"></svg>Длительность: ${item.duration}</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end">
+                        <span class="py-1 px-3 text-xs font-medium rounded-full bg-green-600 text-green-300 mb-2">
+                            ${item.status}
+                        </span>
+                        <button class="btn-purple py-2 px-4 text-sm rounded-lg">Изменить</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Мое Расписание</h1>
+                <p class="text-gray-400 mb-6">Ваше расписание занятий и доступное время для записи учеников.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Занятий на неделю</div>
+                        <div class="text-3xl font-bold text-yellow-400">${schedule.length}</div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Часов на неделю</div>
+                        <div class="text-3xl font-bold text-purple-400">15 ч</div>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Ближайшее занятие</div>
+                        <div class="text-xl font-bold text-yellow-400">20.12.2025</div>
+                        <p class="text-sm text-gray-400 mt-1">09:00 - Иван Петров</p>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold mb-4 text-white">Расписание занятий</h2>
+                <div>
+                    ${scheduleList}
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn-gold py-3 px-8 rounded-xl text-lg">
+                        <svg data-icon="calendar" class="w-6 h-6 inline mr-2"></svg>
+                        Добавить свободное время
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function InstructorToolsView() {
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Рабочие Инструменты</h1>
+                <p class="text-gray-400 mb-6">Дополнительные инструменты для управления процессом обучения.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="glass-panel p-6 rounded-xl">
+                        <svg data-icon="clipboard-pen" class="w-12 h-12 text-purple-400 mb-4"></svg>
+                        <h3 class="text-xl font-bold text-white mb-2">Быстрый отчет</h3>
+                        <p class="text-gray-400 text-sm mb-4">Создайте отчет о занятии за несколько кликов</p>
+                        <button class="btn-purple w-full py-2 rounded-lg">Создать отчет</button>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <svg data-icon="file-text" class="w-12 h-12 text-yellow-400 mb-4"></svg>
+                        <h3 class="text-xl font-bold text-white mb-2">Шаблоны отчетов</h3>
+                        <p class="text-gray-400 text-sm mb-4">Используйте готовые шаблоны для экономии времени</p>
+                        <button class="btn-purple w-full py-2 rounded-lg">Открыть шаблоны</button>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <svg data-icon="chart-line" class="w-12 h-12 text-green-400 mb-4"></svg>
+                        <h3 class="text-xl font-bold text-white mb-2">Аналитика прогресса</h3>
+                        <p class="text-gray-400 text-sm mb-4">Детальная статистика по каждому ученику</p>
+                        <button class="btn-purple w-full py-2 rounded-lg">Просмотреть</button>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <svg data-icon="wrench" class="w-12 h-12 text-blue-400 mb-4"></svg>
+                        <h3 class="text-xl font-bold text-white mb-2">Заявка на ТО</h3>
+                        <p class="text-gray-400 text-sm mb-4">Подайте заявку на техническое обслуживание</p>
+                        <button class="btn-purple w-full py-2 rounded-lg">Создать заявку</button>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <svg data-icon="calendar-check" class="w-12 h-12 text-purple-400 mb-4"></svg>
+                        <h3 class="text-xl font-bold text-white mb-2">Управление расписанием</h3>
+                        <p class="text-gray-400 text-sm mb-4">Настройте доступное время для записи</p>
+                        <button class="btn-purple w-full py-2 rounded-lg">Настроить</button>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <svg data-icon="message-circle" class="w-12 h-12 text-yellow-400 mb-4"></svg>
+                        <h3 class="text-xl font-bold text-white mb-2">Чат с учениками</h3>
+                        <p class="text-gray-400 text-sm mb-4">Общайтесь с учениками в реальном времени</p>
+                        <button class="btn-purple w-full py-2 rounded-lg">Открыть чат</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // --- ADMIN VIEWS ---
+    
+    function AdminDocumentsView() {
+        const docList = mockAdmin.documents.map(doc => `
+            <div class="glass-panel p-4 rounded-xl flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                    <svg data-icon="${doc.icon}" class="w-6 h-6 mr-4 text-purple-400"></svg>
+                    <div>
+                        <p class="text-lg font-semibold text-white">${doc.name}</p>
+                        <p class="text-xs text-gray-500">Размер: ${doc.size} | Загружен: ${doc.uploaded}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="btn-purple py-1 px-3 text-sm rounded-lg">
+                        <svg data-icon="download" class="w-4 h-4"></svg>
+                    </button>
+                    <button class="btn-red py-1 px-3 text-sm rounded-lg">
+                        <svg data-icon="trash-2" class="w-4 h-4"></svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Административные Документы</h1>
+                <p class="text-gray-400 mb-6">Управление основными документами автошколы: уставы, лицензии, прейскуранты.</p>
+                
+                <div class="bg-gray-900/50 p-4 rounded-xl shadow-lg">
+                    ${docList}
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button class="btn-gold py-3 px-8 rounded-xl text-lg flex items-center mx-auto">
+                        <svg data-icon="file-plus" class="w-6 h-6 mr-2"></svg>
+                        Загрузить новый документ
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function AdminStatsView() {
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Статистика и Аналитика</h1>
+                <p class="text-gray-400 mb-6">Ключевые метрики автошколы за текущий период.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Всего учеников</div>
+                        <div class="text-3xl font-bold text-yellow-400">${mockAdmin.stats.totalStudents}</div>
+                        <p class="text-sm text-green-400 mt-1">+12 за месяц</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Активных инструкторов</div>
+                        <div class="text-3xl font-bold text-purple-400">${mockAdmin.stats.activeInstructors}</div>
+                        <p class="text-sm text-gray-400 mt-1">Все работают</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Конверсия</div>
+                        <div class="text-3xl font-bold text-green-400">${mockAdmin.stats.conversionRate}</div>
+                        <p class="text-sm text-gray-400 mt-1">От заявок к обучению</p>
+                    </div>
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="text-sm text-gray-400 mb-1">Доход за месяц</div>
+                        <div class="text-3xl font-bold text-yellow-400">${mockAdmin.stats.monthlyIncome}</div>
+                        <p class="text-sm text-green-400 mt-1">+15% к прошлому месяцу</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h3 class="text-xl font-bold text-yellow-400 mb-4">Распределение по филиалам</h3>
+                        <div class="space-y-3">
+                            ${mockAdmin.branches.map(branch => `
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-gray-300">${branch.name}</span>
+                                        <span class="text-yellow-400 font-semibold">${branch.students} уч.</span>
+                                    </div>
+                                    <div class="w-full bg-gray-700 rounded-full h-2">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: ${(branch.students / mockAdmin.stats.totalStudents * 100)}%"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl">
+                        <h3 class="text-xl font-bold text-yellow-400 mb-4">Статистика обучения</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-300">Завершили обучение</span>
+                                <span class="text-green-400 font-bold text-xl">45</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-300">В процессе</span>
+                                <span class="text-yellow-400 font-bold text-xl">280</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-300">Новые заявки</span>
+                                <span class="text-purple-400 font-bold text-xl">25</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-300">Средний срок обучения</span>
+                                <span class="text-white font-bold text-xl">4.5 мес.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-xl">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">Динамика за последние 6 месяцев</h3>
+                    <div class="text-center py-8 text-gray-400">
+                        <svg data-icon="arrow-up" class="w-16 h-16 mx-auto mb-4 text-purple-400"></svg>
+                        <p>График динамики будет отображаться здесь</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function AdminBranchesView() {
+        const branchCards = mockAdmin.branches.map(branch => `
+            <div class="glass-panel p-6 rounded-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-2xl font-bold text-yellow-400">${branch.name}</h3>
+                    <span class="py-1 px-3 text-xs font-medium rounded-full bg-green-600 text-green-300">Активен</span>
+                </div>
+                <div class="space-y-3 text-gray-300 mb-4">
+                    <p class="flex items-center">
+                        <svg data-icon="map-pin" class="w-5 h-5 mr-2 text-purple-400"></svg>
+                        ${branch.address}
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 pt-3 border-t border-gray-700">
+                        <div>
+                            <p class="text-sm text-gray-400">Инструкторов</p>
+                            <p class="text-2xl font-bold text-purple-400">${branch.instructors}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400">Учеников</p>
+                            <p class="text-2xl font-bold text-yellow-400">${branch.students}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="btn-purple flex-1 py-2 rounded-lg">Редактировать</button>
+                    <button class="btn-gold flex-1 py-2 rounded-lg">Управление</button>
+                </div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="p-6 md:p-10">
+                <h1 class="text-4xl font-extrabold mb-8 text-white">Управление Филиалами</h1>
+                <p class="text-gray-400 mb-6">Настройка и управление учебными филиалами автошколы.</p>
+                
+                <div class="mb-6 flex justify-between items-center">
+                    <div class="glass-panel p-4 rounded-xl">
+                        <p class="text-sm text-gray-400">Всего филиалов</p>
+                        <p class="text-2xl font-bold text-yellow-400">${mockAdmin.branches.length}</p>
+                    </div>
+                    <button class="btn-gold py-3 px-6 rounded-xl">
+                        <svg data-icon="plus" class="w-5 h-5 inline mr-2"></svg>
+                        Добавить филиал
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    ${branchCards}
+                </div>
+            </div>
+        `;
+    }
+    function AdminEmployeesView() { return EmptyView('Управление Сотрудниками', 'Добавление, редактирование и управление сотрудниками автошколы.'); }
+    
+    // --- LAYOUT COMPONENTS ---
+
+    function Header() {
+        // Условное отображение заголовка
+        let title = '';
+        if (state.userRole === 'student') title = 'Панель Ученика';
+        else if (state.userRole === 'instructor') title = 'Панель Инструктора';
+        else if (state.userRole === 'admin') title = 'Панель Администратора';
+
+        return `
+            <header class="sticky top-0 z-30 flex justify-between items-center p-4 glass-sidebar lg:border-none border-b border-gray-700/50">
+                <div class="flex items-center">
+                    <button class="lg:hidden text-white mr-4" onclick="toggleMobileMenu()">
+                        <svg data-icon="menu" class="w-6 h-6"></svg>
+                    </button>
+                    <span class="text-xl font-bold text-white tracking-wider">${title}</span>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Переключатель роли (Для демо) -->
+                    <div class="relative inline-block text-left">
+                        <select onchange="setUserRole(this.value)" class="input-dark rounded-lg py-1 px-3 text-sm">
+                            <option value="student" ${state.userRole === 'student' ? 'selected' : ''}>Ученик</option>
+                            <option value="instructor" ${state.userRole === 'instructor' ? 'selected' : ''}>Инструктор</option>
+                            <option value="admin" ${state.userRole === 'admin' ? 'selected' : ''}>Админ</option>
+                        </select>
+                    </div>
+                    <button class="text-gray-400 hover:text-yellow-400 transition-colors">
+                        <svg data-icon="bell" class="w-6 h-6"></svg>
+                    </button>
+                    <img src="https://placehold.co/40x40/4F46E5/FFF?text=${state.userRole.substring(0, 1).toUpperCase()}" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-purple-500">
+                </div>
+            </header>
+        `;
+    }
+
+    function Sidebar() {
+        let menuItems = [];
+        let setViewFunction = '';
+        let currentView = '';
+        let roleTitle = '';
+
+        if (state.userRole === 'student') {
+            roleTitle = 'Меню Ученика';
+            setViewFunction = 'setStudentView';
+            currentView = state.currentStudentView;
+            menuItems = [
+                { icon: 'book-open-check', label: 'Отчеты', view: 'reports' }, 
+                { icon: 'user', label: 'Мой Профиль', view: 'profile' }, 
+                { icon: 'file-text', label: 'Мои Документы', view: 'documents' }, 
+                { icon: 'calendar-check', label: 'Расписание', view: 'schedule' },
+                { icon: 'clock', label: 'Запись на Вождение', view: 'booking' },
+                { icon: 'video', label: 'Видеокурсы', view: 'video-courses' }, 
+                { icon: 'map', label: 'Филиалы', view: 'branches' }, 
+            ];
+        } else if (state.userRole === 'instructor') {
+            roleTitle = 'Меню Инструктора';
+            setViewFunction = 'setInstructorView';
+            currentView = state.currentInstructorView;
+            menuItems = [
+                { icon: 'users', label: 'Ученики', view: 'students' }, 
+                { icon: 'chart-bar', label: 'Отчетность', view: 'reports' }, 
+                { icon: 'user', label: 'Мой Профиль', view: 'profile' }, 
+                { icon: 'life-buoy', label: 'Сервис / Помощь', view: 'service' }, 
+                { icon: 'calendar', label: 'Мое Расписание', view: 'schedule' },
+                { icon: 'tools', label: 'Рабочие Инструменты', view: 'tools' },
+            ];
+        } else if (state.userRole === 'admin') {
+            roleTitle = 'Меню Администратора';
+            setViewFunction = 'setAdminView';
+            currentView = state.currentAdminView;
+            menuItems = [
+                { icon: 'folder-open', label: 'Документы', view: 'documents' }, 
+                { icon: 'area-chart', label: 'Статистика', view: 'stats' }, 
+                { icon: 'building-2', label: 'Филиалы', view: 'branches' }, 
+                { icon: 'users', label: 'Сотрудники', view: 'employees' },
+            ];
+        }
+
+        const navLinks = menuItems.map(item => `
+            <a href="#" onclick="${setViewFunction}('${item.view}')" 
+                class="nav-item flex items-center p-4 rounded-lg text-sm font-medium transition-all duration-200 
+                ${currentView === item.view ? 'active' : ''}">
+                <svg data-icon="${item.icon}" class="w-5 h-5 mr-3"></svg>
+                ${item.label}
+            </a>
+        `).join('');
+
+        const mobileClass = state.isMobileMenuOpen ? 'sidebar-mobile-open' : 'sidebar-mobile-closed';
+
+        return `
+            <!-- Sidebar -->
+            <aside id="sidebar" class="glass-sidebar w-64 flex-shrink-0 lg:static fixed top-0 left-0 h-full z-50 transition-transform duration-300 ease-in-out ${mobileClass}">
+                <div class="p-6">
+                    <div class="text-xl font-extrabold text-yellow-400 mb-8">
+                        СПЕКТР
+                    </div>
+                    
+                    <p class="text-xs font-semibold uppercase text-gray-500 mb-3 tracking-widest">${roleTitle}</p>
+                    <nav class="space-y-1">
+                        ${navLinks}
+                    </nav>
+                </div>
+            </aside>
+        `;
+    }
+
+    function MainContent() {
+        let Content = '';
+
+        if (state.userRole === 'student') {
+            switch (state.currentStudentView) {
+                case 'booking':
+                    Content = StudentBookingView();
+                    break;
+                case 'schedule':
+                    Content = StudentScheduleView();
+                    break;
+                case 'reports':
+                    Content = StudentReportsView(); 
+                    break;
+                case 'documents':
+                    Content = StudentDocumentsView(); 
+                    break;
+                case 'video-courses':
+                    Content = StudentVideoCoursesView(); 
+                    break;
+                case 'branches':
+                    Content = StudentBranchesView(); 
+                    break;
+                case 'profile':
+                    Content = StudentProfileView(); 
+                    break;
+                default:
+                    Content = StudentReportsView(); // Default to reports
+            }
+        } else if (state.userRole === 'instructor') {
+            switch (state.currentInstructorView) {
+                case 'schedule':
+                    Content = InstructorScheduleView();
+                    break;
+                case 'tools':
+                    Content = InstructorToolsView();
+                    break;
+                case 'service':
+                    Content = InstructorServiceView(); 
+                    break;
+                case 'reports':
+                    Content = InstructorReportsView(); 
+                    break;
+                case 'profile':
+                    Content = InstructorProfileView(); 
+                    break;
+                case 'students':
+                    Content = InstructorStudentsView(); 
+                    break;
+                default:
+                    Content = InstructorStudentsView(); // Default to students
+            }
+        } else if (state.userRole === 'admin') {
+            switch (state.currentAdminView) {
+                case 'documents':
+                    Content = AdminDocumentsView(); 
+                    break;
+                case 'stats':
+                    Content = AdminStatsView(); 
+                    break;
+                case 'branches':
+                    Content = AdminBranchesView(); 
+                    break;
+                case 'employees':
+                    Content = AdminEmployeesView(); 
+                    break;
+                default:
+                    Content = AdminDocumentsView(); // Default to documents
+            }
+        }
+
+        return `
+            <main class="flex-grow flex flex-col overflow-hidden">
+                <!-- Scrollable Content -->
+                <div class="flex-grow overflow-y-auto custom-scrollbar relative">
+                    ${Content}
+                </div>
+            </main>
+        `;
+    }
+    
+    // --- MAIN APP COMPONENT ---
+
+    function PaymentModal() {
+        if (!state.paymentModal.show) return '';
+
+        const modal = state.paymentModal;
+        const formattedDate = modal.date ? new Date(modal.date).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }) : null;
+
+        if (modal.isSuccess) {
+            return `
+                <div id="payment-modal-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div class="glass-panel p-8 rounded-xl max-w-md w-full text-center">
+                        <div class="mb-6">
+                            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg data-icon="check" class="w-12 h-12 text-white"></svg>
+                            </div>
+                            <h2 class="text-3xl font-bold text-white mb-2">Оплата успешна!</h2>
+                            <p class="text-gray-400">Сумма: ${modal.amount} ₽</p>
+                        </div>
+                        <div class="bg-green-900/30 border border-green-700 rounded-lg p-4 mb-6">
+                            <p class="text-green-300 text-sm">${modal.itemName || 'Товар'} успешно оплачен</p>
+                            ${modal.instructorName ? `<p class="text-gray-300 mt-2">Инструктор: ${modal.instructorName}</p>` : ''}
+                            ${formattedDate ? `<p class="text-gray-300">Дата: ${formattedDate} ${modal.time || ''}</p>` : ''}
+                        </div>
+                        <p class="text-gray-400 text-sm">Окно закроется автоматически...</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div id="payment-modal-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onclick="if(event.target.id === 'payment-modal-overlay' && !state.paymentModal.isProcessing) closePaymentModal()">
+                <div class="glass-panel p-8 rounded-xl max-w-md w-full" onclick="event.stopPropagation()">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">Оплата через СБП</h2>
+                        ${!modal.isProcessing ? `                        <button onclick="closePaymentModal()" class="text-gray-400 hover:text-white">
+                            <svg data-icon="x-circle" class="w-6 h-6"></svg>
+                        </button>` : ''}
+                    </div>
+
+                    ${modal.isProcessing ? `
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                            <p class="text-gray-400">Обработка платежа...</p>
+                        </div>
+                    ` : `
+                        <div class="space-y-4 mb-6">
+                            <div class="bg-gray-900/50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-400 mb-1">Товар/Услуга</p>
+                                <p class="text-lg font-semibold text-white">${modal.itemName || 'Занятие по вождению'}</p>
+                            </div>
+
+                            ${modal.instructorName ? `
+                                <div class="bg-gray-900/50 p-4 rounded-lg">
+                                    <p class="text-sm text-gray-400 mb-1">Инструктор</p>
+                                    <p class="text-lg font-semibold text-white">${modal.instructorName}</p>
+                                </div>
+                            ` : ''}
+
+                            ${formattedDate ? `
+                                <div class="bg-gray-900/50 p-4 rounded-lg">
+                                    <p class="text-sm text-gray-400 mb-1">Дата и время</p>
+                                    <p class="text-lg font-semibold text-white">${formattedDate} ${modal.time || ''}</p>
+                                </div>
+                            ` : ''}
+
+                            <div class="bg-gray-900/50 p-4 rounded-lg">
+                                <p class="text-sm text-gray-400 mb-1">Сумма к оплате</p>
+                                <p class="text-3xl font-bold text-yellow-400">${modal.amount} ₽</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-purple-900/30 border border-purple-700 rounded-lg p-4 mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center">
+                                    <img src="${SBP_TOCHKA_LOGO}" alt="${SBP_BANK_NAME}" class="h-8 mr-3">
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">${SBP_BANK_NAME}</p>
+                                        <p class="text-xs text-gray-400">Система быстрых платежей</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t border-purple-700 pt-3 mt-3">
+                                <p class="text-sm text-gray-300 mb-2">Номер телефона для оплаты:</p>
+                                <div class="flex items-center justify-between bg-black/30 p-3 rounded-lg">
+                                    <span class="text-white font-mono text-lg">${SBP_PHONE}</span>
+                                    <button onclick="copyToClipboard('${SBP_PHONE}')" class="btn-purple py-1 px-3 text-xs rounded-lg">
+                                        <svg data-icon="clipboard" class="w-4 h-4"></svg>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-2">Отсканируйте QR-код или отправьте сумму на номер</p>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-3">
+                            <button onclick="closePaymentModal()" class="btn-purple flex-1 py-3 rounded-lg">
+                                Отмена
+                            </button>
+                            <button onclick="simulatePayment()" class="btn-gold flex-1 py-3 rounded-lg">
+                                Оплатить ${modal.amount} ₽
+                            </button>
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    }
+
+    function App() {
+        // Управление видимостью мобильного оверлея
+        const mobileOverlay = document.getElementById('mobile-menu-overlay');
+        if (mobileOverlay) {
+            if (state.isMobileMenuOpen) {
+                mobileOverlay.classList.remove('hidden');
+                setTimeout(() => mobileOverlay.classList.remove('opacity-0'), 10);
+                document.body.classList.add('overflow-hidden');
+            } else {
+                mobileOverlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    mobileOverlay.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }, 300);
+            }
+        }
+
+        return `
+            ${Header()}
+            <div class="flex flex-grow overflow-hidden">
+                ${Sidebar()}
+                ${MainContent()}
+            </div>
+            ${PaymentModal()}
+        `;
+    }
+
+    // Инициализация и первый рендер
+    window.onload = function() {
+        // Инициализируем иконки в корневом документе (для Header)
+        renderIcons(); 
+        // Первый рендер
+        render();
+    };
+
+    </script>
+</body>
+</html>
